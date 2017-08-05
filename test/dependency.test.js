@@ -6,11 +6,12 @@ const fs = require('fs-extra');
 const path = require('path');
 
 describe('DependencyProcessor', () => {
-  const logger = {
-    warn: function() {},
-    info: function() {},
-    log: function() {}
-  };
+  // const logger = {
+  //   warn: function() {},
+  //   info: function() {},
+  //   log: function() {}
+  // };
+  const logger = console;
   const workingDir = 'test/playground/dependency-test';
   const opts = {
     verbose: true
