@@ -1,10 +1,10 @@
 {
   "name": "api-console-dependency-manager",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Module to detect and install Mulesoft's API console dependencies.",
   "main": "main.js",
   "scripts": {
-    "test": "mocha 'test/*.test.js' --reporter spec"
+    "test": "mocha test/*.test.js"
   },
   "engines": {
     "node": ">=6.5.0"
