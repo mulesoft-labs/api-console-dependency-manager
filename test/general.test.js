@@ -7,12 +7,21 @@ const path = require('path');
 
 describe('General test', () => {
   const logger = {
-    warn: function() {},
-    info: function() {},
-    log: function() {}
+    warn: function() {
+      // console.warn.apply(console, arguments);
+    },
+    info: function() {
+      // console.info.apply(console, arguments);
+    },
+    log: function() {
+      // console.log.apply(console, arguments);
+    },
+    error: function() {
+      // console.error.apply(console, arguments);
+    }
   };
   // const logger = console;
-  const workingDir = 'test/playground/dependency-test';
+  const workingDir = 'test/dependency-test';
 
   describe('installs dependencies from the shorthand function', () => {
     const bowerFile = path.join(workingDir, 'bower.json');

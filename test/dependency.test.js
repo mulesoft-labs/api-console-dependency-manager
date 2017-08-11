@@ -7,12 +7,21 @@ const path = require('path');
 
 describe('DependencyProcessor', () => {
   const logger = {
-    warn: function() {},
-    info: function() {},
-    log: function() {}
+    warn: function() {
+      // console.warn.apply(console, arguments);
+    },
+    info: function() {
+      // console.info.apply(console, arguments);
+    },
+    log: function() {
+      // console.log.apply(console, arguments);
+    },
+    error: function() {
+      // console.error.apply(console, arguments);
+    }
   };
   // const logger = console;
-  const workingDir = 'test/playground/dependency-test';
+  const workingDir = 'test/dependency-test';
   const opts = {
     verbose: true
   };
@@ -43,24 +52,32 @@ describe('DependencyProcessor', () => {
       processor.commandRoot = 'bower';
       processor.runningRoot = true;
       var cmd = processor._prepareBowerCommand('install');
-      assert.equal(cmd, 'bower --allow-root install');
+      assert.typeOf(cmd, 'object');
+      assert.equal(cmd.cmd, 'bower', 'Command is bower');
+      assert.equal(cmd.args[0], '--allow-root', 'First argument is allow root');
+      assert.equal(cmd.args[1], 'install', 'Second argument is install');
     });
 
     it('Should use --quiet option', function() {
       processor.commandRoot = 'bower';
       processor.opts.verbose = false;
       var cmd = processor._prepareBowerCommand('install');
-      assert.equal(cmd, 'bower --quiet install');
+      assert.equal(cmd.args[0], '--quiet', 'First argument is quiet');
+      assert.equal(cmd.args[1], 'install', 'Second argument is install');
     });
   });
 
   describe('_setBowerCommandRoot()', () => {
     var processor;
+    var startDir;
     before(function() {
-      return fs.ensureDir(workingDir);
+      startDir = process.cwd();
+      return fs.ensureDir(workingDir)
+      .then(() => process.chdir(workingDir));
     });
 
     after(function() {
+      process.chdir(startDir);
       return fs.remove(workingDir);
     });
 
@@ -95,6 +112,7 @@ describe('DependencyProcessor', () => {
 
     after(function() {
       process.chdir(startDir);
+      return fs.remove(workingDir);
     });
 
     beforeEach(function() {
