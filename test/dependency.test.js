@@ -56,20 +56,12 @@ describe('DependencyProcessor', () => {
 
   describe('_setBowerCommandRoot()', () => {
     var processor;
-    var startDir = process.cwd();
     before(function() {
-      return fs.ensureDir(workingDir)
-      .then(() => {
-        const location = path.resolve(startDir, workingDir);
-        process.chdir(location);
-      });
+      return fs.ensureDir(workingDir);
     });
 
     after(function() {
-      return fs.remove(workingDir)
-      .then(() => {
-        process.chdir(startDir);
-      });
+      return fs.remove(workingDir);
     });
 
     beforeEach(function() {
@@ -78,7 +70,7 @@ describe('DependencyProcessor', () => {
     });
 
     it('Sets a commandRoot variable', function() {
-      this.timeout(30000);
+      this.timeout(300000);
       return processor._setBowerCommandRoot()
       .then(() => {
         assert.isString(processor.commandRoot, 'commandRoot is a string');
@@ -191,7 +183,7 @@ describe('DependencyProcessor', () => {
     });
 
     it('Should install basic dependencies', function() {
-      this.timeout(30000);
+      this.timeout(300000);
       return fs.writeJson(bowerFile, bowerContent)
       .then(() => processor._processDependencies())
       .then(() => {
@@ -209,7 +201,7 @@ describe('DependencyProcessor', () => {
     });
 
     it('Should install basic dependencies with app-route', function() {
-      this.timeout(30000);
+      this.timeout(300000);
       processor.opts.app = true;
       return fs.writeJson(bowerFile, bowerContent)
       .then(() => processor._processDependencies())
@@ -223,7 +215,7 @@ describe('DependencyProcessor', () => {
     });
 
     it('Should install basic dependencies with RAML parser', function() {
-      this.timeout(30000);
+      this.timeout(300000);
       processor.opts.parser = true;
       processor.opts.app = false;
       return fs.writeJson(bowerFile, bowerContent)
