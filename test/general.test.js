@@ -22,7 +22,6 @@ describe('General test', () => {
   };
   // const logger = console;
   const workingDir = 'test/dependency-test';
-
   describe('installs dependencies from the shorthand function', () => {
     const bowerFile = path.join(workingDir, 'bower.json');
     const bowerContent = {
@@ -37,9 +36,12 @@ describe('General test', () => {
         'arc-polyfills': 'advanced-rest-client/arc-polyfills#latest'
       }
     };
-
+    /**
+     * @param {Array<String>} files
+     * @return {Promise}
+     */
     function finishTest(files) {
-      var promise = [];
+      let promise = [];
       if (files instanceof Array) {
         let list = files.map((file) => fs.pathExists(file));
         promise = Promise.all(list);
@@ -61,7 +63,7 @@ describe('General test', () => {
       return fs.remove(workingDir);
     });
 
-    var options;
+    let options;
     beforeEach(function() {
       options = {
         app: false,
@@ -77,7 +79,7 @@ describe('General test', () => {
 
     it('Should install basic dependencies', function() {
       this.timeout(30000);
-      return dependencies.installDependencies(workingDir, logger, options)
+      return dependencies.installDependencies(workingDir, options, logger)
       .then(() => {
         return finishTest([
           path.join(workingDir, 'bower_components'),
@@ -85,7 +87,8 @@ describe('General test', () => {
         ]);
       })
       .then(() => {
-        return fs.pathExists(path.join(workingDir, 'bower_components', 'app-route'));
+        return fs.pathExists(
+          path.join(workingDir, 'bower_components', 'app-route'));
       })
       .then((result) => {
         assert.isFalse(result);
@@ -95,7 +98,7 @@ describe('General test', () => {
     it('Should install basic dependencies with app-route', function() {
       this.timeout(30000);
       options.app = true;
-      return dependencies.installDependencies(workingDir, logger, options)
+      return dependencies.installDependencies(workingDir, options, logger)
       .then(() => {
         return finishTest([
           path.join(workingDir, 'bower_components'),
@@ -108,7 +111,7 @@ describe('General test', () => {
     it('Should install basic dependencies with RAML parser', function() {
       this.timeout(30000);
       options.parser = true;
-      return dependencies.installDependencies(workingDir, logger, options)
+      return dependencies.installDependencies(workingDir, options, logger)
       .then(() => {
         return finishTest([
           path.join(workingDir, 'bower_components'),

@@ -20,127 +20,10 @@ describe('DependencyProcessor', () => {
       // console.error.apply(console, arguments);
     }
   };
-  // const logger = console;
   const workingDir = 'test/dependency-test';
-  const opts = {
-    verbose: true
-  };
-
-  describe('checkIsRoot()', () => {
-    var processor;
-    beforeEach(function() {
-      const options = Object.assign({}, opts);
-      processor = new DependendenciesManager(workingDir, logger, options);
-    });
-
-    it('Returns a boolean value', function() {
-      return processor.checkIsRoot()
-      .then(result => {
-        assert.isBoolean(result);
-      });
-    });
-  });
-
-  describe('_prepareBowerCommand()', () => {
-    var processor;
-    beforeEach(function() {
-      const options = Object.assign({}, opts);
-      processor = new DependendenciesManager(workingDir, logger, options);
-    });
-
-    it('Should use --allow-root option', function() {
-      processor.commandRoot = 'bower';
-      processor.runningRoot = true;
-      var cmd = processor._prepareBowerCommand('install');
-      assert.typeOf(cmd, 'object');
-      assert.equal(cmd.cmd, 'bower', 'Command is bower');
-      assert.equal(cmd.args[0], '--allow-root', 'First argument is allow root');
-      assert.equal(cmd.args[1], 'install', 'Second argument is install');
-    });
-
-    it('Should use --quiet option', function() {
-      processor.commandRoot = 'bower';
-      processor.opts.verbose = false;
-      var cmd = processor._prepareBowerCommand('install');
-      assert.equal(cmd.args[0], '--quiet', 'First argument is quiet');
-      assert.equal(cmd.args[1], 'install', 'Second argument is install');
-    });
-  });
-
-  describe('_setBowerCommandRoot()', () => {
-    var processor;
-    var startDir;
-    before(function() {
-      startDir = process.cwd();
-      return fs.ensureDir(workingDir)
-      .then(() => process.chdir(workingDir));
-    });
-
-    after(function() {
-      process.chdir(startDir);
-      return fs.remove(workingDir);
-    });
-
-    beforeEach(function() {
-      const options = Object.assign({}, opts);
-      processor = new DependendenciesManager(workingDir, logger, options);
-    });
-
-    it('Sets a commandRoot variable', function() {
-      this.timeout(300000);
-      return processor._setBowerCommandRoot()
-      .then(() => {
-        assert.isString(processor.commandRoot, 'commandRoot is a string');
-        assert.isAbove(processor.commandRoot.indexOf('bower'), -1, 'Contains bower');
-      });
-    });
-  });
-
-  describe('hasBower()', () => {
-    var processor;
-    const bowerFile = path.join('bower.json');
-
-    var startDir = process.cwd();
-    before(function() {
-      return fs.remove(workingDir)
-      .then(() => fs.ensureDir(workingDir))
-      .then(() => {
-        const location = path.resolve(startDir, workingDir);
-        process.chdir(location);
-      });
-    });
-
-    after(function() {
-      process.chdir(startDir);
-      return fs.remove(workingDir);
-    });
-
-    beforeEach(function() {
-      const options = Object.assign({}, opts);
-      processor = new DependendenciesManager('.', logger, options);
-      processor.runningRoot = true;
-      return fs.ensureDir(workingDir);
-    });
-
-    afterEach(function() {
-      return fs.remove(workingDir);
-    });
-
-    it('Should return false', function() {
-      return processor.hasBower()
-      .then(result => assert.isFalse(result));
-    });
-
-    it('Should return true', function() {
-      return fs.writeJson(bowerFile, {name: 'test'})
-      .then(() => processor.hasBower())
-      .then(result => assert.isTrue(result));
-    });
-  });
-
   describe('_processDependencies()', () => {
-    var processor;
-    const bowerFile = path.join('bower.json');
+    let processor;
+    const bowerFile = path.join(workingDir, 'bower.json');
     const bowerContent = {
       name: 'test',
       description: 'test',
@@ -153,22 +36,19 @@ describe('DependencyProcessor', () => {
         'arc-polyfills': 'advanced-rest-client/arc-polyfills#latest'
       }
     };
-
-    var startDir = process.cwd();
     before(function() {
-      return fs.ensureDir(workingDir)
-      .then(() => {
-        const location = path.resolve(startDir, workingDir);
-        process.chdir(location);
-      });
+      return fs.ensureDir(workingDir);
     });
 
     after(function() {
-      process.chdir(startDir);
+      fs.remove(workingDir);
     });
-
+    /**
+     * @param {Array<String>} files
+     * @return {Promise}
+     */
     function finishTest(files) {
-      var promise = [];
+      let promise = [];
       if (files instanceof Array) {
         let list = files.map((file) => fs.pathExists(file));
         promise = Promise.all(list);
@@ -191,7 +71,7 @@ describe('DependencyProcessor', () => {
         app: false,
         parser: false
       };
-      processor = new DependendenciesManager('.', logger, options);
+      processor = new DependendenciesManager(workingDir, options, logger);
       processor.runningRoot = true;
       return fs.ensureDir(workingDir);
     });
@@ -206,8 +86,8 @@ describe('DependencyProcessor', () => {
       .then(() => processor._processDependencies())
       .then(() => {
         return finishTest([
-          path.join('.', 'bower_components'),
-          path.join('.', 'bower_components', 'arc-polyfills')
+          path.join(workingDir, 'bower_components'),
+          path.join(workingDir, 'bower_components', 'arc-polyfills')
         ]);
       })
       .then(() => {
@@ -225,9 +105,9 @@ describe('DependencyProcessor', () => {
       .then(() => processor._processDependencies())
       .then(() => {
         return finishTest([
-          path.join('.', 'bower_components'),
-          path.join('.', 'bower_components', 'arc-polyfills'),
-          path.join('.', 'bower_components', 'app-route')
+          path.join(workingDir, 'bower_components'),
+          path.join(workingDir, 'bower_components', 'arc-polyfills'),
+          path.join(workingDir, 'bower_components', 'app-route')
         ]);
       });
     });
@@ -240,9 +120,9 @@ describe('DependencyProcessor', () => {
       .then(() => processor._processDependencies())
       .then(() => {
         return finishTest([
-          path.join('.', 'bower_components'),
-          path.join('.', 'bower_components', 'raml-js-parser'),
-          path.join('.', 'bower_components', 'raml-json-enhance')
+          path.join(workingDir, 'bower_components'),
+          path.join(workingDir, 'bower_components', 'raml-js-parser'),
+          path.join(workingDir, 'bower_components', 'raml-json-enhance')
         ]);
       });
     });
