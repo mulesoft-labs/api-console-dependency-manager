@@ -14,12 +14,12 @@ const {DependenciesOptions} = require('./lib/dependencies-options.js');
  * Sorthand function to `DependendenciesManager#installDependencies()`.
  *
  * @param {String} workingDir Path to a working directory instance.
- * @param {Winston} logger Logger to use to log debug output
  * @param {DependenciesOptions} opts Options passed to the module
+ * @param {Winston} logger Logger to use to log debug output
  * @return {Promise} Resolved promise when operation is completed.
  */
-module.exports.installDependencies = function(workingDir, logger, opts) {
-  const manager = new DependendenciesManager(workingDir, logger, opts);
+module.exports.installDependencies = function(workingDir, opts, logger) {
+  const manager = new DependendenciesManager(workingDir, opts, logger);
   return manager.installDependencies();
 };
 /**

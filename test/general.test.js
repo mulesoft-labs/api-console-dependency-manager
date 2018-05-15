@@ -67,7 +67,8 @@ describe('General test', () => {
     beforeEach(function() {
       options = {
         app: false,
-        parser: false
+        parser: false,
+        isV4: true
       };
       return fs.ensureDir(workingDir)
       .then(() => fs.writeJson(bowerFile, bowerContent));

@@ -5,7 +5,7 @@ const assert = require('chai').assert;
 const fs = require('fs-extra');
 const path = require('path');
 
-describe('DependencyProcessor', () => {
+describe('DependencyProcessor - APIC v4', function() {
   const logger = {
     warn: function() {
       // console.warn.apply(console, arguments);
@@ -21,7 +21,7 @@ describe('DependencyProcessor', () => {
     }
   };
   const workingDir = 'test/dependency-test';
-  describe('_processDependencies()', () => {
+  describe('_processDependencies()', function() {
     let processor;
     const bowerFile = path.join(workingDir, 'bower.json');
     const bowerContent = {
@@ -69,7 +69,8 @@ describe('DependencyProcessor', () => {
     beforeEach(function() {
       const options = {
         app: false,
-        parser: false
+        parser: false,
+        isV4: true
       };
       processor = new DependendenciesManager(workingDir, options, logger);
       processor.runningRoot = true;
