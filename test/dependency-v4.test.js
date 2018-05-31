@@ -1,11 +1,11 @@
 'use strict';
 
-const dependencies = require('../');
+const {DependendenciesManager} = require('../lib/dependencies.js');
 const assert = require('chai').assert;
 const fs = require('fs-extra');
 const path = require('path');
 
-describe('General test', () => {
+describe('DependencyProcessor - APIC v4', function() {
   const logger = {
     warn: function() {
       // console.warn.apply(console, arguments);
@@ -20,9 +20,9 @@ describe('General test', () => {
       // console.error.apply(console, arguments);
     }
   };
-  // const logger = console;
   const workingDir = 'test/dependency-test';
-  describe('installs dependencies from the shorthand function', () => {
+  describe('_processDependencies()', function() {
+    let processor;
     const bowerFile = path.join(workingDir, 'bower.json');
     const bowerContent = {
       name: 'test',
@@ -36,6 +36,13 @@ describe('General test', () => {
         'arc-polyfills': 'advanced-rest-client/arc-polyfills#latest'
       }
     };
+    before(function() {
+      return fs.ensureDir(workingDir);
+    });
+
+    after(function() {
+      fs.remove(workingDir);
+    });
     /**
      * @param {Array<String>} files
      * @return {Promise}
@@ -59,19 +66,15 @@ describe('General test', () => {
       });
     }
 
-    before(function() {
-      return fs.remove(workingDir);
-    });
-
-    let options;
     beforeEach(function() {
-      options = {
+      const options = {
         app: false,
         parser: false,
         isV4: true
       };
-      return fs.ensureDir(workingDir)
-      .then(() => fs.writeJson(bowerFile, bowerContent));
+      processor = new DependendenciesManager(workingDir, options, logger);
+      processor.runningRoot = true;
+      return fs.ensureDir(workingDir);
     });
 
     afterEach(function() {
@@ -79,8 +82,9 @@ describe('General test', () => {
     });
 
     it('Should install basic dependencies', function() {
-      this.timeout(30000);
-      return dependencies.installDependencies(workingDir, options, logger)
+      this.timeout(300000);
+      return fs.writeJson(bowerFile, bowerContent)
+      .then(() => processor._processDependencies())
       .then(() => {
         return finishTest([
           path.join(workingDir, 'bower_components'),
@@ -88,8 +92,7 @@ describe('General test', () => {
         ]);
       })
       .then(() => {
-        return fs.pathExists(
-          path.join(workingDir, 'bower_components', 'app-route'));
+        return fs.pathExists(path.join('.', 'bower_components', 'app-route'));
       })
       .then((result) => {
         assert.isFalse(result);
@@ -97,9 +100,10 @@ describe('General test', () => {
     });
 
     it('Should install basic dependencies with app-route', function() {
-      this.timeout(30000);
-      options.app = true;
-      return dependencies.installDependencies(workingDir, options, logger)
+      this.timeout(300000);
+      processor.opts.app = true;
+      return fs.writeJson(bowerFile, bowerContent)
+      .then(() => processor._processDependencies())
       .then(() => {
         return finishTest([
           path.join(workingDir, 'bower_components'),
@@ -110,9 +114,11 @@ describe('General test', () => {
     });
 
     it('Should install basic dependencies with RAML parser', function() {
-      this.timeout(30000);
-      options.parser = true;
-      return dependencies.installDependencies(workingDir, options, logger)
+      this.timeout(300000);
+      processor.opts.parser = true;
+      processor.opts.app = false;
+      return fs.writeJson(bowerFile, bowerContent)
+      .then(() => processor._processDependencies())
       .then(() => {
         return finishTest([
           path.join(workingDir, 'bower_components'),
