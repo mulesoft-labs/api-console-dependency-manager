@@ -33,7 +33,21 @@ describe('General test', () => {
         'The Advanced REST client authors <arc@mulesoft.com>'
       ],
       dependencies: {
-        'arc-polyfills': 'advanced-rest-client/arc-polyfills#latest'
+        'polymer': 'Polymer/polymer#^2.0.0',
+        'iron-flex-layout': 'PolymerElements/iron-flex-layout#^2.0.0',
+        'iron-media-query': 'PolymerElements/iron-media-query#^2.1.0',
+        'paper-toast': 'PolymerElements/paper-toast#^2.0.0',
+        'app-layout': 'PolymerElements/app-layout#^2.0.0',
+        'app-route': 'PolymerElements/app-route#^2.0.0',
+        'paper-icon-button': 'PolymerElements/paper-icon-button#^2.0.0',
+        'api-navigation': 'advanced-rest-client/api-navigation#^2.0.0',
+        'api-documentation': 'advanced-rest-client/api-documentation#^2.0.0',
+        'api-request-panel': 'advanced-rest-client/api-request-panel#^2.0.0',
+        'oauth-authorization': 'advanced-rest-client/oauth-authorization#^2.0.1',
+        'cryptojs-lib': 'advanced-rest-client/cryptojs-lib#^0.1.1',
+        'web-animations-js': 'web-animations/web-animations-js#^2.3',
+        'arc-polyfills': 'advanced-rest-client/arc-polyfills#^0.1.11',
+        'api-console-ext-comm': 'advanced-rest-client/api-console-ext-comm#^2.0.0'
       }
     };
     /**
@@ -65,11 +79,7 @@ describe('General test', () => {
 
     let options;
     beforeEach(function() {
-      options = {
-        app: false,
-        parser: false,
-        isV4: true
-      };
+      options = {};
       return fs.ensureDir(workingDir)
       .then(() => fs.writeJson(bowerFile, bowerContent));
     });
@@ -84,40 +94,37 @@ describe('General test', () => {
       .then(() => {
         return finishTest([
           path.join(workingDir, 'bower_components'),
-          path.join(workingDir, 'bower_components', 'arc-polyfills')
-        ]);
-      })
-      .then(() => {
-        return fs.pathExists(
-          path.join(workingDir, 'bower_components', 'app-route'));
-      })
-      .then((result) => {
-        assert.isFalse(result);
-      });
-    });
-
-    it('Should install basic dependencies with app-route', function() {
-      this.timeout(30000);
-      options.app = true;
-      return dependencies.installDependencies(workingDir, options, logger)
-      .then(() => {
-        return finishTest([
-          path.join(workingDir, 'bower_components'),
           path.join(workingDir, 'bower_components', 'arc-polyfills'),
-          path.join(workingDir, 'bower_components', 'app-route')
+          path.join(workingDir, 'bower_components', 'iron-flex-layout'),
+          path.join(workingDir, 'bower_components', 'iron-media-query'),
+          path.join(workingDir, 'bower_components', 'paper-toast'),
+          path.join(workingDir, 'bower_components', 'app-layout'),
+          path.join(workingDir, 'bower_components', 'app-route'),
+          path.join(workingDir, 'bower_components', 'api-navigation'),
+          path.join(workingDir, 'bower_components', 'api-documentation'),
+          path.join(workingDir, 'bower_components', 'api-request-panel')
         ]);
       });
     });
 
-    it('Should install basic dependencies with RAML parser', function() {
+    it('Installs basic and additional dependencies', function() {
       this.timeout(30000);
-      options.parser = true;
+      options.optionalDependencies = [
+        'advanced-rest-client/oauth-authorization#^2.0.0',
+        'advanced-rest-client/cryptojs-lib',
+        'advanced-rest-client/arc-polyfills',
+        'advanced-rest-client/xhr-simple-request#^2.0.0',
+        'web-animations/web-animations-js#^2.3'
+      ];
       return dependencies.installDependencies(workingDir, options, logger)
       .then(() => {
         return finishTest([
           path.join(workingDir, 'bower_components'),
-          path.join(workingDir, 'bower_components', 'raml-js-parser'),
-          path.join(workingDir, 'bower_components', 'raml-json-enhance')
+          path.join(workingDir, 'bower_components', 'oauth-authorization'),
+          path.join(workingDir, 'bower_components', 'cryptojs-lib'),
+          path.join(workingDir, 'bower_components', 'arc-polyfills'),
+          path.join(workingDir, 'bower_components', 'xhr-simple-request'),
+          path.join(workingDir, 'bower_components', 'web-animations-js')
         ]);
       });
     });
