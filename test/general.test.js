@@ -18,6 +18,9 @@ describe('General test', () => {
     },
     error: function() {
       // console.error.apply(console, arguments);
+    },
+    debug: function() {
+      // console.log.apply(console, arguments);
     }
   };
   // const logger = console;
@@ -90,7 +93,7 @@ describe('General test', () => {
 
     it('Should install basic dependencies', function() {
       this.timeout(30000);
-      return dependencies.installDependencies(workingDir, options, logger)
+      return dependencies.installDependencies(workingDir, options)
       .then(() => {
         return finishTest([
           path.join(workingDir, 'bower_components'),
