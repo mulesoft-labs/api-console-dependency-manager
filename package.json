@@ -21,7 +21,7 @@
     "dependencies"
   ],
   "author": "Pawel Psztyc, Advanced Rest Client Authors",
-  "license": "Apache-2.0 or CC-BY-4.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/mulesoft-labs/api-console-dependency-manager/issues"
   },
