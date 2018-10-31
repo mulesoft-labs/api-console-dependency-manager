@@ -1,6 +1,6 @@
 # api-console-dependency-manager
 
-[![Build Status](https://travis-ci.org/advanced-rest-client/multipart-payload-editor.svg?branch=stage)](https://travis-ci.org/advanced-rest-client/multipart-payload-editor)
+[![Build Status](https://travis-ci.org/advanced-rest-client/multipart-payload-editor.svg?branch=stage)](https://travis-ci.org/mulesoft-labs/api-console-dependency-manager)
 
 A npm module to detect and install Mulesoft's API console dependencies.
 
