@@ -1,5 +1,13 @@
 # api-console-dependency-manager
 
+![Warning][warning] ![Warning][warning] ![Warning][warning] ![Warning][warning]
+
+Moved to: https://www.npmjs.com/package/@api-components/api-console-dependency-manager
+
+Do not use this version in new projects.
+
+![Warning][warning] ![Warning][warning] ![Warning][warning] ![Warning][warning]
+
 https://travis-ci.org/advanced-rest-client/api-console-dependency-manager.svg?branch=master
 
 A npm module to detect and install Mulesoft's API console dependencies.
@@ -84,3 +92,5 @@ Resolved promise when operation is completed.
 - Order of arguments is reversed
 - It uses locally installed Bower dependency and does not checks if bower is installed on local machine.
 - Now additional dependencies has to be defined in the configuration options
+
+[warning]: warning-icon.png "Warning"
