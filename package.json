@@ -1,6 +1,6 @@
 {
   "name": "@api-components/api-console-dependency-manager",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Module to detect and install Mulesoft's API console dependencies.",
   "main": "main.js",
   "scripts": {
