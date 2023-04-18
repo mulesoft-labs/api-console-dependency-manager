@@ -28,7 +28,7 @@
   "homepage": "https://github.com/mulesoft-labs/api-console-dependency-manager#readme",
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^5.2.0"
+    "mocha": "^10.2.0"
   },
   "dependencies": {
     "bower": "^1.8.8",
